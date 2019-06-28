@@ -1,0 +1,21 @@
+button {
+  display: inline-block;
+  position: absolute;
+  left: 175px;
+  top: 8px;
+}
+input {
+  display: inline-block;
+  position: relative;
+}
+/*
+styling {
+  background-color: orange;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  left: 50%;
+  height: 100px;
+  width: 100px;
+}
+*/
