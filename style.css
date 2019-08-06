@@ -8,14 +8,10 @@ input {
   display: inline-block;
   position: relative;
 }
-/*
-styling {
-  background-color: orange;
-  color: white;
-  font-weight: bold;
-  position: absolute;
-  left: 50%;
-  height: 100px;
-  width: 100px;
+table{
+  position: relative;
+  top: 50px;
 }
-*/
+table, th, td {
+    border: 1px solid black;
+}

@@ -1,18 +1,19 @@
-$(document).ready(initializeApp); // This line is defining a function that will run once the HTML document loads.
+$(document).ready(initializeApp);
+
 
 var the_number = null;
+var counter = 1;
 function pick_number () {
   var random_number = Math.floor((Math.random() * 10) + 1);
   console.log(random_number);
   return random_number;
 }
 function initializeApp () {
-//this is where you need to place the function call for your random number generator function.
-//You will also place your clickhandler in here
+  studentHighScore();
   the_number = pick_number();
   $("button").click(make_guess);
-  //makeNewButtons();
 
+  var yourName = '';
   function make_guess() {
     var the_guess = $("#guess_input").val();
     console.log(the_guess);
@@ -22,28 +23,61 @@ function initializeApp () {
       $("#response_div").text("Too Low!");
     } else {
       $("#response_div").text("You guessed it!");
+
+
+      yourName = prompt("Enter your name: ");
+      addHighScore(yourName, counter);
+      studentHighScore();
     }
+    counter++;
   }
 }
-/*
-function makeNewButtons(){
-
-  for (var index = 0; index < 10; index++ , numStyle++){
-    var numStyle = 0;
-    var styleSwag = {
-      class: 'styling',
-      'text': numStyle
-  }
-
-    var swagDivs = $('<button>',styleSwag);
-    $(".styleFun").append(swagDivs);
-
-    swagDivs.click(function(){
-      alert("The click happened");
-    })
-    $("styleFun").append(swagDivs);
-
-
-  }
+function addHighScore(name, score) {
+  $.ajax({
+    url: 'http://localhost:3001/addscore',
+    method: 'get',
+    dataType: 'json',
+    data: {
+      name: name,
+      score: score
+    },
+    success: function (response) {
+      console.log("worked! ", response);
+    },
+    error: function (response) {
+      console.log('ruh roh add highscore failed', response);
+    }
+  });
 }
-*/
+function studentHighScore() {
+  $.ajax({
+    url: 'http://localhost:3001/scores',
+    method: 'get',
+    dataType: 'json',
+    success: function (response) {
+      console.log("success", response);
+      $(".tableArea").empty();
+      var scoreTable = $("<table>");
+      var headerRow = $("<tr>");
+      var nameHeader = $("<th>");
+      var scoreHeader = $("<th>");
+      nameHeader.text("Name");
+      scoreHeader.text("Score");
+      headerRow.append(nameHeader, scoreHeader);
+      scoreTable.append(headerRow);
+      for( var index = 0; index < response.length; index++){
+        var highscoreRow = $("<tr>");
+        var highscoreName = $("<td>")
+        highscoreName.text(response[index].name);
+        var scoreData = $("<td>");
+        scoreData.text(response[index].score);
+        highscoreRow.append(highscoreName, scoreData);
+        scoreTable.append(highscoreRow);
+        $(".tableArea").append(scoreTable);
+      }
+    },
+    error: function (response) {
+      console.log('ruh roh', response);
+    }
+  });
+}
